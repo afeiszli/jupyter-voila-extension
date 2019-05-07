@@ -24,9 +24,9 @@ def _install_requirements():
     return requirements
 
 setup(
-    name='publish_service',
+    name='webdav_service',
     version='0.0.1',
-    description='JupyterHub service to add a public route for notebook publishing',
+    description='JupyterHub service to add a public route for webdav within a notebook server',
     author='Red Hat, Inc.',
     author_email='vasek@redhat.com',
     url='https://github.com/vpavlin/jupyter-publish-extension',
