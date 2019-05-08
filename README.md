@@ -1,21 +1,19 @@
 # JupyterHub Publish Extension
 
-This extension and service allow you to publish and share your notebooks in JupyterHub
+This extension and service allow you to use webdav with your notebooks in JupyterHub
 
 Requirements:
 
 * Using KubeSpawner (i.e. running on top of Kubernetes/OpenShift)
 * Installing this repo through pip
-* Installing & enabling `publish.js` as nbextension
+* Installing & enabling webdav in your notebook container
 * Edit your `jupyterhub_config.py`
-
-All bellow is done automatically if you use Open Data Hub deployment of JupyterHub (see https://gitlab.com/opendatahub/jupyterhub-ansible)
 
 ## Install and run the publish service
 Add git URL to your `requirements.txt` for JupyterHub
 
 ```
-git+https://github.com/vpavlin/jupyter-publish-extension.git
+git+https://github.com/afeiszli/jupyter-webdav-extension.git
 ```
 
 And add the following to your `jupyterhub_config.py` to enable the service to run
@@ -23,30 +21,30 @@ And add the following to your `jupyterhub_config.py` to enable the service to ru
 ```
 import uuid
 c.ConfigurableHTTPProxy.auth_token = str(uuid.uuid4())
-public_service_dict = {
+webdav_service_dict = {
                         'PROXY_TOKEN': c.ConfigurableHTTPProxy.auth_token,
                         'PROXY_API_URL': 'http://%s:%d/' % ("127.0.0.1", 8082)
                     }
-public_service_dict.update(os.environ)
+webdav_service_dict.update(os.environ)
 c.JupyterHub.services = [
                             {
-                                'name': 'public',
-                                'command': ['bash', '-c', 'jupyter_publish_service'],
-                                'environment': public_service_dict
+                                'name': 'webdav',
+                                'command': ['bash', '-c', 'jupyter_webdav_service'],
+                                'environment': webdav_service_dict
                             }
                         ]
 ```
 
-You also need to extend the Jupyter single user server to run a nbviewer sidecar container
+You also need to extend the Jupyter single user server to run a webdav sidecar container
 
 ```
 c.KubeSpawner.singleuser_extra_containers = [
         {
-            "name": "nbviewer",
-            "image": "nbviewer:latest",
+            "name": "webdav",
+            "image": "httpd:latest",
             "ports": [
                 {
-                    "containerPort": 9090,
+                    "containerPort": 8081,
                     "protocol": "TCP"
                 }
             ],
@@ -90,10 +88,10 @@ c.KubeSpawner.singleuser_extra_containers = [
     ]
 ```
 
-The `nbviewer` image is based on https://github.com/vpavlin/nbviewer-quickstart which is designed to be built and run on top of OpenShift. To get the image available, run
+The `webdav` image is based on https://github.com/afeiszli/webdav-quickstart which is designed to be built and run on top of OpenShift. To get the image available, run
 
 ```
-oc apply -f https://raw.githubusercontent.com/vpavlin/nbviewer-quickstart/master/images.json
+oc apply -f https://raw.githubusercontent.com/afeiszli/webdav-quickstart/master/images.json
 ```
 
 ## Install the extension

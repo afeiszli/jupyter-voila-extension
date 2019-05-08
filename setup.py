@@ -27,12 +27,12 @@ setup(
     name='webdav_service',
     version='0.0.1',
     description='JupyterHub service to add a public route for webdav within a notebook server',
-    author='Red Hat, Inc.',
-    author_email='vasek@redhat.com',
-    url='https://github.com/vpavlin/jupyter-publish-extension',
+    author='Alex Feiszli',
+    author_email='alex.feiszli@gmail.com',
+    url='https://github.com/afeiszli/jupyter-webdav-extension',
     license="GPL3",
     entry_points={
-        'console_scripts': ['jupyter_publish_service=publish_service.publish_service:run'],
+        'console_scripts': ['jupyter_webdav_service=webdav_service.webdav_service:run'],
     },
     packages=find_packages(),
     install_requires=_install_requirements()
