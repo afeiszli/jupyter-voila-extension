@@ -44,7 +44,7 @@ def run():
       for user in users:
         target = urlparse(data[user[0]]["target"])
         print(target)
-        new_target_url = "%s://%s:%s" % (target.scheme, target.hostname, str(WEBDAV_PORT))
+        new_target_url = "%s://%s:%s" % (target.scheme, target.hostname, str(WEBDAV_PORT), "/webdav/")
         print(os.path.join(PROXY_API_URL, "api/routes", user[0], "webdav/"))
         res_post = requests.post(os.path.join(PROXY_API_URL, "api/routes", user[0].strip("/"), "webdav/"), json={"target": new_target_url}, headers={'Authorization': 'token %s' % PROXY_TOKEN})
         if res_post.status_code != 201:
