@@ -41,7 +41,7 @@ You also need to extend the Jupyter single user server to run a webdav sidecar c
 c.KubeSpawner.singleuser_extra_containers = [
         {
             "name": "webdav",
-            "image": "httpd:latest",
+            "image": "openshift/httpd:latest",
             "ports": [
                 {
                     "containerPort": 8081,
@@ -50,17 +50,12 @@ c.KubeSpawner.singleuser_extra_containers = [
             ],
             "env" : [
                 {
-                    "name": "NBVIEWER_LOCALFILES",
-                    "value": "/opt/app-root/src/public_notebooks"
-                },
-                {
-                    "name": "NBVIEWER_TEMPLATES",
-                    "value": "/opt/app-root/src"
-                },
-                {
-                    "name": "NBVIEWER_PORT",
+                    "name": "WEBDAV_PORT",
                     "value": "9090"
                 },
+		{
+            	    "name": "WEBDAV_AUTHENTICATION_REALM",
+                    "value": "chaosmonkey/httpd-webdav"
                 {
                     "name": "JUPYTERHUB_SERVICE_PREFIX",
                     "value": "/user/{username}/public/"
@@ -81,8 +76,17 @@ c.KubeSpawner.singleuser_extra_containers = [
             "volumeMounts": [
                 {
                     "mountPath": "/opt/app-root/src",
-                    "name": "data"
-                }
+                    "name": "volume-dh6g7"
+                },
+                {
+		    "mountPath": "/opt/app-root/secrets/webdav/",
+                    "name": "volume-92dkl"
+ 		},
+		{
+            	    "mountPath": "/etc/httpd/conf.d/90-webdav.conf",
+                    "name": "volume-pv4s4",
+                    "subPath": "90-webdav.conf"
+		}
             ]
         }
     ]
@@ -92,15 +96,5 @@ The `webdav` image is based on https://github.com/afeiszli/webdav-quickstart whi
 
 ```
 oc apply -f https://raw.githubusercontent.com/afeiszli/webdav-quickstart/master/images.json
-```
-
-## Install the extension
-
-```
-[ -z "${PUBLISH_EXTENSION_VERSION}" ] && PUBLISH_EXTENSION_VERSION=master
-
-jupyter nbextension install --sys-prefix https://raw.githubusercontent.com/vpavlin/jupyter-publish-extension/${PUBLISH_EXTENSION_VERSION}/publish.js
-
-jupyter nbextension enable --sys-prefix publish
 ```
 
