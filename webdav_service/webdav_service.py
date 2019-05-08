@@ -23,7 +23,7 @@ def run():
     data = res.json()
     users = []
     for key, val in data.items():
-        if key.startswith("/user") and not key.endswith("webdav/"):
+        if key.startswith("/user") and not key.endswith("webdav"):
           webdav_route = data.get(os.path.join(key, "webdav/"))
           if webdav_route:
             webdav_hostname = urlparse(webdav_route['target'])
