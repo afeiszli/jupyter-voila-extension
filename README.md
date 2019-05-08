@@ -1,4 +1,4 @@
-# JupyterHub Publish Extension
+# JupyterHub WebDav Extension
 
 This extension and service allow you to use webdav with your notebooks in JupyterHub
 
@@ -9,7 +9,7 @@ Requirements:
 * Installing & enabling webdav in your notebook container
 * Edit your `jupyterhub_config.py`
 
-## Install and run the publish service
+## Install and run the webdav service
 Add git URL to your `requirements.txt` for JupyterHub
 
 ```
