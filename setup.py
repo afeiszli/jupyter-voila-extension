@@ -24,15 +24,15 @@ def _install_requirements():
     return requirements
 
 setup(
-    name='webdav_service',
+    name='voila_service',
     version='0.0.1',
-    description='JupyterHub service to add a public route for webdav within a notebook server',
+    description='JupyterHub service to add a public route for voila within a notebook server',
     author='Alex Feiszli',
     author_email='alex.feiszli@gmail.com',
-    url='https://github.com/afeiszli/jupyter-webdav-extension',
+    url='https://github.com/afeiszli/jupyter-voila-extension',
     license="GPL3",
     entry_points={
-        'console_scripts': ['jupyter_webdav_service=webdav_service.webdav_service:run'],
+        'console_scripts': ['jupyter_voila_service=voila_service.voila_service:run'],
     },
     packages=find_packages(),
     install_requires=_install_requirements()
