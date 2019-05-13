@@ -7,7 +7,7 @@ import time
 PROXY_TOKEN = os.environ['PROXY_TOKEN']
 PROXY_API_URL = os.environ['PROXY_API_URL']
 MAX_RETRIES = os.environ.get("MAX_RETRIES", 10)
-WEBDAV_PORT = os.environ.get("WEBDAV_PORT", 8081)
+VOILA_PORT = os.environ.get("VOILA_PORT", 8866)
 SYNC_TIMEOUT = os.environ.get('SYNC_TIMEOUT', 5)
 
 def run():
@@ -24,7 +24,7 @@ def run():
     users = []
     for key, val in data.items():
         if key.startswith("/user") and not key.endswith("voila"):
-          voila_route = data.get(os.path.join(key, "voila/"))
+          voila_route = data.get(os.path.join(key, "voila"))
           if voila_route:
             voila_hostname = urlparse(voila_route['target'])
             current_hostname = urlparse(val['target'])
@@ -44,9 +44,9 @@ def run():
       for user in users:
         target = urlparse(data[user[0]]["target"])
         print(target)
-        new_target_url = "%s://%s:%s/%s" % (target.scheme, target.hostname, str(WEBDAV_PORT), "voila/")
-        print(os.path.join(PROXY_API_URL, "api/routes", user[0], "voila/"))
-        res_post = requests.post(os.path.join(PROXY_API_URL, "api/routes", user[0].strip("/"), "voila/"), json={"target": new_target_url}, headers={'Authorization': 'token %s' % PROXY_TOKEN})
+        new_target_url = "%s://%s:%s" % (target.scheme, target.hostname, str(VOILA_PORT))
+        print(os.path.join(PROXY_API_URL, "api/routes", user[0], "voila"))
+        res_post = requests.post(os.path.join(PROXY_API_URL, "api/routes", user[0].strip("/"), "voila"), json={"target": new_target_url}, headers={'Authorization': 'token %s' % PROXY_TOKEN})
         if res_post.status_code != 201:
           print("Failed to create route for %s" % user)
 
