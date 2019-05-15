@@ -1,4 +1,4 @@
-# JupyterHub WebDav Extension
+# JupyterHub Voila Extension
 
 This extension and service allow you to use voila with your notebooks in JupyterHub
 
@@ -35,66 +35,4 @@ c.JupyterHub.services = [
                         ]
 ```
 
-You also need to extend the Jupyter single user server to run a voila sidecar container
-
-```
-c.KubeSpawner.singleuser_extra_containers = [
-        {
-            "name": "voila",
-            "image": "openshift/httpd:latest",
-            "ports": [
-                {
-                    "containerPort": 8081,
-                    "protocol": "TCP"
-                }
-            ],
-            "env" : [
-                {
-                    "name": "WEBDAV_PORT",
-                    "value": "9090"
-                },
-		{
-            	    "name": "WEBDAV_AUTHENTICATION_REALM",
-                    "value": "chaosmonkey/httpd-voila"
-                {
-                    "name": "JUPYTERHUB_SERVICE_PREFIX",
-                    "value": "/user/{username}/public/"
-                },
-                {
-                    "name": "CACHE_EXPIRY_MIN",
-                    "value": "30"
-                },
-                {
-                    "name": "CACHE_EXPIRY_MAX",
-                    "value": "60"
-                },
-                {
-                    "name": "NO_CACHE",
-                    "value": "true"
-                }
-            ],
-            "volumeMounts": [
-                {
-                    "mountPath": "/opt/app-root/src",
-                    "name": "volume-dh6g7"
-                },
-                {
-		    "mountPath": "/opt/app-root/secrets/voila/",
-                    "name": "volume-92dkl"
- 		},
-		{
-            	    "mountPath": "/etc/httpd/conf.d/90-voila.conf",
-                    "name": "volume-pv4s4",
-                    "subPath": "90-voila.conf"
-		}
-            ]
-        }
-    ]
-```
-
-The `voila` image is based on https://github.com/afeiszli/voila-quickstart which is designed to be built and run on top of OpenShift. To get the image available, run
-
-```
-oc apply -f https://raw.githubusercontent.com/afeiszli/voila-quickstart/master/images.json
-```
-
+### NOTE: You must get Voila running on your notebook, on port 8866, on your own; this does not manage the notebook, only routing to the notebook.
